@@ -22,13 +22,13 @@ namespace DeepnetSoft.Controllers
             this.configuration = config;
         }
 
-        [HttpGet("{id}")]
-        public CategoryProductViewModel Get(string id)
+        [HttpGet("{id?}")]
+        public CategoryProductViewModel Get(string id="0")
         {
             CategoryProductViewModel categoryViewModel = new CategoryProductViewModel();
-            categoryViewModel.Categories = GetSubCategoriesByCategoryID(id);
+            categoryViewModel.SubCategories = GetSubCategoriesByCategoryID(id);
             categoryViewModel.Products = GetProductsByCategoryID(id);
-
+            categoryViewModel.Category = GetCategoryByCategoryID(id);
             return categoryViewModel;
         }
         private List<Category> GetSubCategoriesByCategoryID(string id)
@@ -55,11 +55,50 @@ namespace DeepnetSoft.Controllers
                                             select new Category
                                             {
                                                 CategoryID = (int)row["category_id"],
-                                                CategoryName = row["category_name"].ToString()
-
+                                                CategoryName = row["category_name"].ToString(),
+                                                  ProductCount = GetProductCountByID(row["category_id"].ToString())
                                             }).ToList();
             return  categories;
         }
+        private Category GetCategoryByCategoryID(string id)
+        {
+            if (id == "0")
+            {
+                return new Category
+                {
+                    CategoryID = 0,
+                    CategoryName = "Category",
+                    ProductCount = GetProductCountByID("0"),
+                };
+            }
+            string querry = @"SELECT * FROM dbo.category WHERE category_id = " + id + @"";
+            DataTable dataTable = new DataTable();
+            string SqlDataSource = configuration.GetConnectionString("ProductAppCon");
+            SqlDataReader reader;
+            using (SqlConnection sqlConnection = new SqlConnection(SqlDataSource))
+            {
+                sqlConnection.Open();
+                using (SqlCommand command = new SqlCommand(querry, sqlConnection))
+                {
+                    reader = command.ExecuteReader();
+                    dataTable.Load(reader);
+                    reader.Close();
+                    sqlConnection.Close();
+
+                }
+
+            }
+            Category category = (from DataRow row in dataTable.Rows
+
+                                 select new Category
+                                 {
+                                     CategoryID = (int)row["category_id"],
+                                     CategoryName = row["category_name"].ToString(),
+                                     ProductCount = GetProductCountByID(id)
+                                 }).FirstOrDefault();
+            return category;
+        }
+        
         private List<Product> GetProductsByCategoryID(string id)
         {
             string querry = @"SELECT * FROM dbo.product WHERE category_id = " + id + @"";
@@ -90,6 +129,41 @@ namespace DeepnetSoft.Controllers
 
                                          }).ToList();
             return products;
+        }
+        private int GetProductCountByID(string id)
+        {
+            string querry;
+            if (id == "0")
+            {
+                querry = @"Select product_id from dbo.product";
+            }
+            else
+            {
+                querry = @"Select * from dbo.product where category_id in(
+SELECT category_id FROM dbo.category
+WHERE hierarchal_order LIKE '%/" + id + @"/%'or category_id="+id+@");";
+            }
+            DataTable dataTable = new DataTable();
+            int result = 0;
+            string SqlDataSource = configuration.GetConnectionString("ProductAppCon");
+            SqlDataReader reader;
+            using (SqlConnection sqlConnection = new SqlConnection(SqlDataSource))
+            {
+                sqlConnection.Open();
+                using (SqlCommand command = new SqlCommand(querry, sqlConnection))
+                {
+                    reader = command.ExecuteReader();
+                    dataTable.Load(reader);
+                    reader.Close();
+                    sqlConnection.Close();
+
+                }
+
+            }
+            result = dataTable.Rows.Count;
+
+                  
+            return result;
         }
     }
 

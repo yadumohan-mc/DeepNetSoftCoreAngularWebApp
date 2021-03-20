@@ -1,0 +1,25 @@
+<div class="col col-md-12 d-flex justify-content-center">
+    <div class="col col-md-3 " *ngIf="service.ViewModel.Products.length>0">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+              <th scope="col"> <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+               
+              </div></th>
+              <th scope="col">Product Name</th>
+              <th scope="col">Price</th>
+            </tr>
+          </thead>
+          <tr *ngFor="let pt of service.ViewModel.Products">
+            <td><div class="">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+               
+              </div>
+            </td>  
+            <td>{{pt.ProductName}}</td>
+            <td>{{pt.ProductPrice}}</td>
+         </tr>
+      </table>
+      </div>
+</div>

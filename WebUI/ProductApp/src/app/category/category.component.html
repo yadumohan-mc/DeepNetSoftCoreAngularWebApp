@@ -1,0 +1,6 @@
+
+<div class="col col-md-12 rounded border border-dark border-2" *ngIf="service.ViewModel.SubCategories.length>0">
+    <div class="list-group list-group-item-action">
+        <button class="list-group-item list-group-item-action"  *ngFor="let ct of service.ViewModel.SubCategories" (click)="getCategory(ct.CategoryID)">{{ct.CategoryName}} ({{ct.ProductCount}})</button>
+    </div>
+</div>

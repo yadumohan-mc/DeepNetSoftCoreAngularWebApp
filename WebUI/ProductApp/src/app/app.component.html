@@ -1,0 +1,28 @@
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+<div class="row" style="height: 50px;"></div>
+<div class="row">
+<div class="col col-md-4">
+  <img src="../assets/images/Dns.png" style="width: 60%; padding-left: 50px;">
+
+</div>
+<div class="col col-md-4 " style="margin-bottom: 10px;">
+  <div class="row">
+  <nav aria-label="breadcrumb" style="width:100px;" >
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item" *ngIf="service.prevId.length>=1" style="color: #0d6efd;text-decoration: underline;cursor: pointer;" aria-current="page" (click)="goToPrev()"> Previous</li>
+    </ol>
+  </nav>
+  <div class="col col-md-9 text-center">
+    <h3> {{service.ViewModel.Category.CategoryName}}( {{service.ViewModel.Category.ProductCount}}) </h3>
+  </div>
+</div>
+
+
+
+<app-category></app-category></div>
+</div>
+<div class="col col-md-4 ">
+
+</div>
+<div><app-product></app-product></div>

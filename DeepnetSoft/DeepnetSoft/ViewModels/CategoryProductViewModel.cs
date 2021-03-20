@@ -8,11 +8,12 @@ namespace DeepnetSoft.ViewModels
 {
     public class CategoryProductViewModel
     {
-        public List<Category> Categories { get; set; }
+        public Category Category { get; set; }
+        public List<Category> SubCategories { get; set; }
         public List<Product> Products { get; set; }
         public CategoryProductViewModel()
         {
-            this.Categories = new List<Category>();
+            this.SubCategories = new List<Category>();
             this.Products = new List<Product>();
 
         }
